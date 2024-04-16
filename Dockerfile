@@ -1,12 +1,35 @@
-FROM buildpack-deps:buster
+FROM debian:buster-slim
 
 ENV LANG C.UTF-8
 
-# additional haskell specific deps
+# Define a pasta de trabalho como "haskell"
+WORKDIR /haskell
+
+# Instalação do Vim
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        vim && \
+    rm -rf /var/lib/apt/lists/*
+
+# Instalação de dependências comuns do Haskell + Stack
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        dpkg-dev \
+        git \
+        gcc \
+        gnupg \
+        g++ \
+        libc6-dev \
+        libffi-dev \
+        libgmp-dev \
         libnuma-dev \
-        libtinfo-dev && \
+        libtinfo-dev \
+        make \
+        netbase \
+        xz-utils \
+        zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ARG STACK=2.15.5
@@ -80,7 +103,7 @@ RUN set -eux; \
     \
     cabal --version
 
-ARG GHC=9.8.2
+ARG GHC=9.6.4
 ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
 
 RUN set -eux; \
@@ -90,10 +113,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='9a3776fd8dc02f95b751f0e44823d6727dea2c212857e2c5c5f6a38a034d1575'; \
+            GHC_SHA256='d430345a66128c858e09dd9a90e5beabc045a9a3cedf776aea3adb45d1286276'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='7449e1c8ef351ec326f36d9eba2885ba7b75d9900df35b2069c4d6fd151b09eb'; \
+            GHC_SHA256='59885c43902110262cda168513dc6a9cc750e3e728dffb0cdb168e44929cb014'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
@@ -110,11 +133,11 @@ RUN set -eux; \
     cd "ghc-$GHC-$ARCH-unknown-linux"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
+    # remove profiling support to save space
+    find "/opt/ghc/$GHC/" \( -name "*_p.a" -o -name "*.p_hi" \) -type f -delete; \
     \
     rm -rf /tmp/*; \
     \
     "/opt/ghc/$GHC/bin/ghc" --version
 
 ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/ghc/${GHC}/bin:$PATH
-
-CMD ["ghci"]
