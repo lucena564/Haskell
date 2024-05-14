@@ -82,3 +82,10 @@ greater = (answer > 71) # Vai ter um valor falso
 yes :: Bool
 yes = True
 ```
+
+## Volumes - haskell image
+
+```
+$ docker container run -ti --mount type=bind,src=C:/volume,dst=/volume haskell
+```
+OBS: C:/volume é a pasta que eu criei no meu diretório.
