@@ -1,13 +1,7 @@
 # [Haskell](http://www.haskell.org/)
 Repositório para guardar as anotações sobre Haskell, linguagem funcional
 
-Para rodar Haskell usando um container basta pegar a imagem disponibilizada no [site do Haskell](https://hub.docker.com/_/haskell/).
-
-```
-$ docker run -it --rm haskell:9
-```
-
-Também podemos rodar o comando abaixo para buildar o Dockerfile que está na pasta:
+Rodar o comando abaixo para buildar o Dockerfile que está na pasta:
 ```
 $ docker build -t haskell .
 ```
@@ -83,7 +77,7 @@ yes :: Bool
 yes = True
 ```
 
-## Volumes - haskell image
+## Volumes - haskell image - Lembrar de alterar para a pasta volume que está aqui
 
 ```
 $ docker container run -ti --mount type=bind,src=C:/volume,dst=/volume haskell
