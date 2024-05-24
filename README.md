@@ -82,4 +82,9 @@ yes = True
 ```
 $ docker container run -ti --mount type=bind,src=C:/volume,dst=/volume haskell
 ```
-OBS: C:/volume é a pasta que eu criei no meu diretório.
+* Para o notebook ZBOOK:
+
+```
+$ docker container run -ti --mount type=bind,src=C:\Users\victo\Desktop\Haskell\volume,dst=/volume haskell
+```
+OBS: ```C:/volume``` é a pasta que eu criei no meu diretório. Ou essa pasta ```C:\Users\victo\Desktop\Haskell\volume```.
